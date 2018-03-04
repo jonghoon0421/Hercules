@@ -6,7 +6,7 @@
 /*   By: jonkim <jonkim@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 16:53:09 by jonkim            #+#    #+#             */
-/*   Updated: 2018/03/02 22:35:32 by jonkim           ###   ########.fr       */
+/*   Updated: 2018/03/03 18:44:46 by jonkim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int		main(void)
 	sleep(1);
 	while (1)
 	{
-		printf("Enter your ping request message : ");
+		printf("Enter your message : ");
 		fgets(msg, 1000, stdin);
 		len = strlen(msg);
 		if (len > 0 && msg[len - 1] == '\n')
@@ -76,8 +76,10 @@ int		main(void)
 		else
 		{
 		printf("Server reply : ");
-//		printf("%s\n", server_reply);
-		printf("%s\n", "PONG PONG");
+		if (strcmp(server_reply, "ping") == 0)
+			printf("%s\n", "\nPONG\nPONG");
+		else
+			printf("%s\n", server_reply);
 		}
 	}
 	close(sock);

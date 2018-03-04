@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
+/*   server_copy.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jonkim <jonkim@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 15:51:17 by jonkim            #+#    #+#             */
-/*   Updated: 2018/03/02 22:37:39 by jonkim           ###   ########.fr       */
+/*   Updated: 2018/03/03 18:36:15 by jonkim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdio.h>
+#include <signal.h>
+#include <fcntl.h>
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
 #define RETURN_SUCCESS 0
@@ -101,7 +103,7 @@ int		main(int ac, char **av)
 		pid = 0;
 		sid = 0;
 		pid = fork(); // fork a new child process
-		if (pid < 0)
+		if (pid == -1)
 		{
 			printf("Error: failed to fork().\n");
 			exit(EXIT_FAILURE);
@@ -109,22 +111,42 @@ int		main(int ac, char **av)
 		// terminate the parent process if we have a "good PID"
 		if (pid > 0)
 			exit(EXIT_SUCCESS);
-		// change the file mode mask
-		umask(0);
-		// create a new SID for the child process
+		// start a new session for the daemon
 		sid = setsid();
-		if (sid < 0)
+		if (sid == -1)
+		{
+			printf("Error: failed to become a session leader.\n");
 			exit(EXIT_FAILURE);
-		// close out the standard fd's
+		}
+		// fork again, allowing the parent(child) process to terminate
+		// this creates a grandchild process (which will eventually be adopted
+		// by the "init process," making sure it doesn'y become a zombie process
+		// BUT I STILL THINK ONE FORK IS SAFE ENOUGH
+		signal(SIGHUP, SIG_IGN);
+		pid = fork();
+		if (pid < 0)
+		{
+			printf("Error: failed to fork().\n");
+			exit(EXIT_FAILURE);
+		}
+		// terminate the parent(child) process if we have a "good PID"
+		if (pid > 0)
+			exit(EXIT_SUCCESS);
+		// set the daemon's working directory to the root
+		if (chdir("/") == -1)
+			exit(EXIT_FAILURE);
+		umask(0);
+		// close and reopen standard fd's
 		close(STDIN_FILENO);
 		close(STDOUT_FILENO);
 		close(STDERR_FILENO);
-
-		// DAEMON specific initialization below ...
-
+		if (open("/dev/null",O_RDONLY) == -1)
+			exit(EXIT_FAILURE);
+		if (open("/dev/null",O_WRONLY) == -1)
+			exit(EXIT_FAILURE);
+		if (open("/dev/null",O_RDWR) == -1)
+			exit(EXIT_FAILURE);
 		set_server();
-
-		// DAEMON specific initialization above ...
 		exit(EXIT_SUCCESS);
 	}
 	else if (ac == 1)
