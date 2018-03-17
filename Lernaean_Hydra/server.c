@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server_copy.c                                      :+:      :+:    :+:   */
+/*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jonkim <jonkim@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 15:51:17 by jonkim            #+#    #+#             */
-/*   Updated: 2018/03/03 18:36:15 by jonkim           ###   ########.fr       */
+/*   Updated: 2018/03/16 17:04:31 by jonkim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,10 @@ int		set_server(void)
 	// receive a message from client
 	while ((read_size = recv(client_sock, ret_str, 1000, 0)) > 0)
 	{
-		write(client_sock, ret_str, strlen(ret_str));
+		if (strcmp(ret_str, "ping\n") == 0)
+			write(client_sock, "PONG\nPONG\n", 10);
+		else
+			write(client_sock, ret_str, strlen(ret_str));
 		bzero(ret_str, 1000);
 	}
 	if (read_size == 0)

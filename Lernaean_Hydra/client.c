@@ -6,7 +6,7 @@
 /*   By: jonkim <jonkim@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 16:53:09 by jonkim            #+#    #+#             */
-/*   Updated: 2018/03/03 18:44:46 by jonkim           ###   ########.fr       */
+/*   Updated: 2018/03/16 15:20:16 by jonkim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,10 +76,7 @@ int		main(void)
 		else
 		{
 		printf("Server reply : ");
-		if (strcmp(server_reply, "ping") == 0)
-			printf("%s\n", "\nPONG\nPONG");
-		else
-			printf("%s\n", server_reply);
+		printf("%s\n", server_reply);
 		}
 	}
 	close(sock);

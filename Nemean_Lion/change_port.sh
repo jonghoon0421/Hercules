@@ -6,12 +6,12 @@
 #    By: jonkim <jonkim@student.42.us.org>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/02/23 21:12:25 by jonkim            #+#    #+#              #
-#    Updated: 2018/02/23 23:13:52 by jonkim           ###   ########.fr        #
+#    Updated: 2018/03/16 15:17:12 by jonkim           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # make sure to have "root" access
-# Settings/System - "Enable I/O APIC
+# Settings/System - "Enable I/O APIC"
 # Settings/Network - "Adapter 2 : Host-only Adapter : vboxnet0"
 
 # install ssh
